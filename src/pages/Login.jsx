@@ -15,12 +15,12 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/login', { email, password });
+     const response = await api.post('/api/v1/auth/login', { email, password });
       // Store the token for future requests
       localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
       toast.success('Login Successful! Welcome back, Supervisor.');
-      
+      navigate('/dashboard');
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed. Check your credentials.');
     } finally {

@@ -5,6 +5,22 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [newCourse, setNewCourse] = useState({ title: '', description: '', code: '' });
+
+//function to handle the creation
+const handleCreateCourse = async (e) => {
+  e.preventDefault();
+  try {
+    
+    await api.post('/api/v1/courses', newCourse);
+    toast.success("Course created successfully!");
+    setIsModalOpen(false);
+    fetchCourses(); // Refresh the list
+  } catch (error) {
+    toast.error("Failed to create course");
+  }
+};
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -30,6 +46,17 @@ const Dashboard = () => {
     toast.success("Logged out successfully");
   };
 
+  const handleDelete = async (id) => {
+  if (window.confirm("Are you sure you want to delete this course? This action cannot be undone.")) {
+    try {
+      await api.delete(`/api/v1/courses/${id}`);
+      toast.success("Course deleted successfully");
+      fetchCourses(); // Refresh the list
+    } catch (error) {
+      toast.error("Could not delete the course. It might be protected.");
+    }
+  }
+};
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar - Desktop */}
