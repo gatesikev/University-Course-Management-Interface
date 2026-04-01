@@ -57,6 +57,31 @@ const handleCreateCourse = async (e) => {
     }
   }
 };
+
+const [editingCourse, setEditingCourse] = useState(null);
+
+const handleUpdateCourse = async (e) => {
+  e.preventDefault();
+  try {
+    // PUT request to update the specific course by ID
+    await api.put(`/api/v1/courses/${editingCourse.id}`, editingCourse);
+    toast.success("Course updated successfully!");
+    setEditingCourse(null); // Close the edit mode
+    fetchCourses(); // Refresh the list
+  } catch (error) {
+    toast.error("Failed to update course. Make sure all fields are filled.");
+  }
+};
+
+const viewDetails = async (id) => {
+  try {
+    const response = await api.get(`/api/v1/courses/${id}`);
+    // You can show this in a simple alert or a nice modal
+    alert(`Course: ${response.data.title}\n\nDescription: ${response.data.description}`);
+  } catch (error) {
+    toast.error("Could not fetch course details.");
+  }
+};
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar - Desktop */}
@@ -109,13 +134,15 @@ const handleCreateCourse = async (e) => {
             </p>
             
             <div className="flex gap-3 border-t border-slate-50 pt-4">
-              {/* Edit Button - We'll add logic here next */}
-              <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 py-2 rounded-lg transition">
+              
+              <button 
+              onClick={() => setEditingCourse(course)}
+              className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 py-2 rounded-lg transition">
                 <Edit size={16} /> 
                 Edit
               </button>
               
-              {/* Delete Button with the handleDelete function we created */}
+              {/* Delete Button with the handleDelete function */}
               <button 
                 onClick={() => handleDelete(course.id)}
                 className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-red-500 hover:text-red-700 hover:bg-red-50 py-2 rounded-lg transition"
