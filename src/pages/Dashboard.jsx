@@ -83,33 +83,57 @@ const handleCreateCourse = async (e) => {
           </button>
         </header>
 
-        <main className="p-8">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center h-64 text-slate-500">
-              <Loader2 className="animate-spin mb-2" /> Loading Courses...
+       <main className="p-8">
+  {loading ? (
+    <div className="flex flex-col items-center justify-center h-64 text-slate-500">
+      <Loader2 className="animate-spin mb-2" /> 
+      <span>Loading Courses...</span>
+    </div>
+  ) : (
+    /* This div now handles Mobile (1 col), Tablet (2 cols), and Desktop (3 cols) */
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {courses.length > 0 ? (
+        courses.map((course) => (
+          <div key={course.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition group">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="font-bold text-lg text-slate-800 group-hover:text-blue-600 transition">
+                {course.title}
+              </h3>
+              <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                ID: {course.id}
+              </span>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <div key={course.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-bold text-lg text-slate-800">{course.title}</h3>
-                    <span className="bg-blue-50 text-blue-600 text-xs font-bold px-2 py-1 rounded">ID: {course.id}</span>
-                  </div>
-                  <p className="text-slate-600 text-sm mb-6 line-clamp-2">{course.description}</p>
-                  <div className="flex gap-3 border-t pt-4">
-                    <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 transition">
-                      <Edit size={16} /> Edit
-                    </button>
-                    <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-red-500 hover:text-red-700 transition">
-                      <Trash2 size={16} /> Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+            
+            <p className="text-slate-600 text-sm mb-6 line-clamp-2 min-h-[40px]">
+              {course.description}
+            </p>
+            
+            <div className="flex gap-3 border-t border-slate-50 pt-4">
+              {/* Edit Button - We'll add logic here next */}
+              <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 py-2 rounded-lg transition">
+                <Edit size={16} /> 
+                Edit
+              </button>
+              
+              {/* Delete Button with the handleDelete function we created */}
+              <button 
+                onClick={() => handleDelete(course.id)}
+                className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-red-500 hover:text-red-700 hover:bg-red-50 py-2 rounded-lg transition"
+              >
+                <Trash2 size={16} /> 
+                Delete
+              </button>
             </div>
-          )}
-        </main>
+          </div>
+        ))
+      ) : (
+        <div className="col-span-full text-center py-12 text-slate-400 bg-white rounded-xl border border-dashed">
+          No courses found. Click "Add New Course" to get started!
+        </div>
+      )}
+    </div>
+  )}
+</main>
       </div>
     </div>
   );
