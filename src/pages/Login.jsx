@@ -10,24 +10,32 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    const response = await api.post('/api/auth/login', { email, password });
 
-    try {
-     const response = await api.post('/api/v1/auth/login', { email, password });
-      // Store the token for future requests
-      localStorage.setItem('token', response.data.token);
-      toast.success('Login Successful! Welcome back, Supervisor.');
+    // 1. Log the response to see exactly where the token is!
+    console.log("Full Response Data:", response.data);
+
+    // 2. Extract the token (usually it's response.data.token or response.data.access_token)
+    const token = response.data.accessToken; 
+
+    if (token) {
+      // 3. Save it to Local Storage
+      localStorage.setItem('token', token);
+      toast.success('Login Successful!');
       navigate('/dashboard');
-
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed. Check your credentials.');
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Login worked, but no token was received.");
     }
-  };
-
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">

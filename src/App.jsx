@@ -10,6 +10,7 @@ function App() {
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
