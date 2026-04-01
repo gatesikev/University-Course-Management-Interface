@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Mail, Lock, LogIn, Loader2 } from 'lucide-react';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('admin@example.com');
   const [password, setPassword] = useState('adminpassword123');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ const Login = () => {
       const response = await api.post('/auth/login', { email, password });
       // Store the token for future requests
       localStorage.setItem('token', response.data.token);
+      navigate('/dashboard');
       toast.success('Login Successful! Welcome back, Supervisor.');
       
     } catch (error) {
